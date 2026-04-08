@@ -6,8 +6,8 @@ const ejsMate = require('ejs-mate')
 const path = require('path')
 const listings = require('./routes/listings.js')
 const reviews = require('./routes/review.js')
-
-
+const session =require("express-session")
+const flash = require('connect-flash')
 const MONGO_URL = "mongodb://localhost:27017/BookNest"
 
 main().then(() => {
@@ -32,12 +32,27 @@ app.use(express.static(path.join(__dirname, "/public")))
 app.use(express.json())
 
 
+
+
+
+const sessionOptions = {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly:true,
+  },
+};
+
+
 app.get('/', (req, res) => {
-
     res.send('hi am root')
-
 })
 
+app.use(session(sessionOptions));
+app.use(flash())
 
 
 
@@ -45,26 +60,15 @@ app.get('/', (req, res) => {
 
 
 
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
 
-
-
-
-
+  next()
+})
 
 app.use('/listings' , listings)
 app.use('/listings/:id/reviews' , reviews)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 app.use((req, res) => {
@@ -79,10 +83,6 @@ app.use((err, req, res, next) => {
 
 
 
-
-
 app.listen(8080, function () {
-
-
     console.log("server is listening to port 8080")
 })  
