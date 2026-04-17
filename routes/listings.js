@@ -19,18 +19,11 @@ let errMsg = error.details.map((el)=>el.message).join(",");
 }
 
 
-
-
-
 router.get('/',wrapAsync(async (req, res) => {
 
     const allListing = await Listing.find({})
     res.render("listings/index", { allListing })
 }))
-
-
-
-
 
 
 //new route
@@ -39,9 +32,6 @@ router.get('/new', async (req, res) => {
     res.render("listings/new")
 
 })
-
-
-
 
 //show route
 router.get('/:id' ,wrapAsync(async (req, res) => {
@@ -57,16 +47,10 @@ if(!listing) {
 
 }))
 
-
-
 //Create Route
-
-
 router.post("/", validatelisting ,wrapAsync(async (req, res) => {
 
-
     const newListing = new Listing(req.body.listing);
-
 
     await newListing.save();
     req.flash("success" , "new listing create")

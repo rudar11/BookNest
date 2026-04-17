@@ -8,10 +8,8 @@ const Listing = require('../models/listing')
 const Review = require('../models/review.js')
 
 
-
 const validateReview = (req, res, next) => {
     let {error} = reviewSchema.validate(req.body)
-
 
     if (error) {
 let errMsg = error.details.map((el)=>el.message).join(",");
@@ -20,7 +18,6 @@ let errMsg = error.details.map((el)=>el.message).join(",");
         next()
     }
 }
-
 
 
 
@@ -52,6 +49,5 @@ req.flash("success" , " review Deleted")
     res.redirect(`/listings/${id}`);
   })
 );
-
 
 module.exports = router;
