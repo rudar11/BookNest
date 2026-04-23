@@ -8,32 +8,33 @@ const listingSchema = new mongoose.Schema({
     },
     description: String,
     image: {
-        type: String,
-        default: "https://cdn.pixabay.com/photo/2024/06/06/20/32/milky-way-8813395_1280.jpg" ,
-        set: (v) => v === "" ? "https://cdn.pixabay.com/photo/2024/06/06/20/32/milky-way-8813395_1280.jpg" : v,
+
+        url: String,
+        filename: String
+
     },
     price: Number,
     location: String,
     country: String,
-    reviews:[
+    reviews: [
         {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Review"
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Review"
         }
     ],
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-       
+
 
     }
 }, { timestamps: true })
 
 
 listingSchema.post("findOneAndDelete", async (listing) => {
-  if (listing) {
-    await Review.deleteMany({ _id: { $in: listing.reviews } });
-  }
+    if (listing) {
+        await Review.deleteMany({ _id: { $in: listing.reviews } });
+    }
 });
 
 
