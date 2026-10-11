@@ -6,18 +6,13 @@ const Listing = require('../models/listing.js')
 const { isLoggedIn , isOwner , validatelisting } = require('../middleware.js')
 const listingController = require("../controllers/listings.js")
 const multer = require('multer')
-
 const { storage } = require('../cloudconfig.js')
-
 const upload = multer({ storage })
 
 router
 .route('/')
 .get(wrapAsync(listingController.index))
 .post( isLoggedIn,  upload.single('listing[image]') ,validatelisting,wrapAsync(listingController.createlisting));
-
-
-
 
 //new route
 router.get('/new', isLoggedIn , listingController.renderNewForm)
@@ -30,6 +25,5 @@ router.route('/:id')
 
 //Edit Route
 router.get("/:id/edit", isLoggedIn , isOwner, wrapAsync(listingController.renderEditForm))
-
 
 module.exports = router;
